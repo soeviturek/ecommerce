@@ -3,3 +3,6 @@ npm run dev
 
 //route groups
 https://nextjs.org/docs/app/building-your-application/routing/route-groups
+
+//shadcn ui docs
+https://ui.shadcn.com/docs/components/button
