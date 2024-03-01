@@ -11,6 +11,9 @@ interface ModalProps{
     onClose:()=>void;
     children?: React.ReactNode;
 };
+
+// a template for a Modal, it should have a title, a description, isOpen status and a onclose function
+// maybe some children
 export const Modal: React.FC<ModalProps> = ({
     title,
     description,

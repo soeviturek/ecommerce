@@ -6,7 +6,7 @@ import {Modal} from "@/components/ui/modal";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -14,8 +14,11 @@ const formSchema = z.object({
     name: z.string().min(1), //at least 1 character for name
 });
 
+//this is a StoreModal that controls the creation of a store
+// this StoreModal can use hook useStoreModal which tracks and controls onclost and onopen
 export const StoreModal = () =>{
-    const storeModal = useStoreModal();
+    // store model hook
+    const storeModal = useStoreModal(); 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -29,6 +32,7 @@ export const StoreModal = () =>{
     }
 
     return(
+        //this is a StoreModal, still a Modal, that has a tile, a description, a isOpen status and a onClose function
         <Modal
             title="Create store"
             description="Add a new store"
@@ -43,7 +47,8 @@ export const StoreModal = () =>{
                             <FormField
                                 control={form.control}
                                 name="name"
-                                render={(field)=>(
+                                // if you don't have {} around field, it will not update in real time
+                                render={({field})=>(
                                     <FormItem>
                                         <FormLabel>Name</FormLabel>
                                         <FormControl>
@@ -51,17 +56,18 @@ export const StoreModal = () =>{
                                             {/* field: onBlur .etc */}
                                             <Input placeholder="E-Commerce" {...field}/>
                                         </FormControl>
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             {/* self closing tag for Form */}
+                            <div className="pt-6 space-x-2 flex items-center justify-end w-full">
+                                <Button variant="outline" 
+                                        onClick={storeModal.onClose}>Cancel</Button>
+                                {/* this will trigger onSubmit function     */}
+                                <Button type="submit">Continue</Button> 
+                            </div>
                         </form>
-                        <div className="pt-6 space-x-2 flex items-center justify-end w-full">
-                            <Button variant="outline" 
-                                    onClick={storeModal.onClose}>Cancel</Button>
-                            {/* this will trigger onSubmit function*/}    
-                            <Button type="submit">Continue</Button> 
-                        </div>
                     </Form>
                 </div>
             </div>

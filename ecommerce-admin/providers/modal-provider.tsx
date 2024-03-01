@@ -3,7 +3,8 @@
 import { useEffect,useState } from "react";
 import { StoreModal } from "@/components/modals/store-modal";
 
-//client component, make sure use this code to fix hydration error
+//this return a StoreModal and controlls the rendering of it
+//client component, make sure use this useEffect code to fix hydration error
 export const ModalProvider = () => {
     const [isMounted, setIsMounted] = useState(false);
 

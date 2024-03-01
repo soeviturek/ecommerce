@@ -6,6 +6,7 @@ interface useStoreModalStore{
     onClose: ()=> void;
 };
 
+// a set to control StoreModal, instead of directly manipulate the object
 export const useStoreModal = create<useStoreModalStore>((set) =>({
     isOpen: false,
     onOpen: ()=>set({isOpen:true}),
