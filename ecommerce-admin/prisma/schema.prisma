@@ -14,6 +14,7 @@ datasource db {
   relationMode = "prisma"
 }
 
+// npx prisma generate add prisma model to node module 
 model Store{
   id            String @id @default(uuid())
   name          String

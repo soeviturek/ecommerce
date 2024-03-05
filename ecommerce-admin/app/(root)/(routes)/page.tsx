@@ -3,8 +3,7 @@ import { Modal } from "@/components/ui/modal";
 import { useStoreModal } from "@/hooks/use-store-modal";
 import { useEffect } from "react";
 
-// import { Button } from "@/components/ui/button";
-// // destruct import
+// destruct import
 const SetupPage = () => {
   //this is a much better way to trigger a modal than writing <StoreModal>
   const onOpen = useStoreModal((state) => state.onOpen);
@@ -16,11 +15,8 @@ const SetupPage = () => {
     } 
   },[isOpen,onOpen]); //dependency array
 
-  return (
-    <div className="p-4">
-      Root Page
-    </div>
-  );
+  //only need setupPage to trigger modal
+  return null;
 }
 
 export default SetupPage;

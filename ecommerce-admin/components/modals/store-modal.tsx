@@ -9,6 +9,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { redirect } from "next/dist/server/api-utils";
 
 const formSchema = z.object({
     name: z.string().min(1), //at least 1 character for name
@@ -19,6 +23,8 @@ const formSchema = z.object({
 export const StoreModal = () =>{
     // store model hook
     const storeModal = useStoreModal(); 
+    //everything should be disabled if we've already submitted the form
+    const [loading,setLoading] = useState(false); 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -28,7 +34,27 @@ export const StoreModal = () =>{
 
     const onSubmit = async (values: z.infer<typeof formSchema>) =>{
         // Create Store
-        console.log(values);
+        try {
+           setLoading(true);
+
+
+        //    values is name and userId
+           const response = await axios.post('/api/stores', values);
+        //    console.log(response.data);
+
+        // this will be a popup window/alert
+        // toast.success("Stoore created.");
+
+            // why not using the router? 
+            // windows.location will do a complete refresh on the page
+            // the store created will be 100% loaded into the database
+            window.location.assign(`/${response.data.id}`);
+        } catch (error) {
+            // console.log(error)
+            toast.error("Something went wrong.");
+        }finally{
+            setLoading(false);
+        }
     }
 
     return(
@@ -54,7 +80,8 @@ export const StoreModal = () =>{
                                         <FormControl>
                                             {/* spred field props into input, to handle everyting the field handles */}
                                             {/* field: onBlur .etc */}
-                                            <Input placeholder="E-Commerce" {...field}/>
+                                            <Input disabled={loading} 
+                                                    placeholder="E-Commerce" {...field}/>
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>
@@ -62,10 +89,12 @@ export const StoreModal = () =>{
                             />
                             {/* self closing tag for Form */}
                             <div className="pt-6 space-x-2 flex items-center justify-end w-full">
-                                <Button variant="outline" 
+                                <Button disabled={loading}
+                                        variant="outline" 
                                         onClick={storeModal.onClose}>Cancel</Button>
                                 {/* this will trigger onSubmit function     */}
-                                <Button type="submit">Continue</Button> 
+                                <Button disabled={loading}
+                                        type="submit">Continue</Button> 
                             </div>
                         </form>
                     </Form>

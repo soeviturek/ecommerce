@@ -6,7 +6,7 @@ declare global{
 };
 
 const prismadb = globalThis.prisma || new PrismaClient();
-// hot reloading will create a new instance each time, causing warning
+// hot reloading will create a new instance each time, causing warning and degration of performance
 if(process.env.NODE_ENV !== "production") globalThis.prisma = prismadb;
 
 export default prismadb;
