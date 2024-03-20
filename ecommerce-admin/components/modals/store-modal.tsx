@@ -56,9 +56,8 @@ export const StoreModal = () =>{
             setLoading(false);
         }
     }
-
     return(
-        //this is a StoreModal, still a Modal, that has a tile, a description, a isOpen status and a onClose function
+                //this is a StoreModal, still a Modal, that has a tile, a description, a isOpen status and a onClose function
         <Modal
             title="Create store"
             description="Add a new store"

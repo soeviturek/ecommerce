@@ -18,7 +18,7 @@ export const ModalProvider = () => {
     return (
         <>
         {/* can be accessed globally */}
-        <StoreModal/>
+        <StoreModal />
         </>
     )
 }
