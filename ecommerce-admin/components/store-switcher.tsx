@@ -95,12 +95,11 @@ export default function StoreSwitcher({
                     <CommandList>
                         <CommandGroup>
                             <CommandItem
-                            // onSelect={()=>{
-                            //     console.log("selected");
-                            //     setOpen(false);
-                            //     storeModal.onOpen();
-                            // }}
-                            onSelect={() => console.log('Selected')}
+                                onSelect={()=>{
+                                    console.log("selected");
+                                    setOpen(false);
+                                    storeModal.onOpen();
+                                }}
                             >
                                 <PlusCircle className="mr-2 h-5 w-5"/>
                                 Create Store
@@ -109,6 +108,13 @@ export default function StoreSwitcher({
                         </CommandGroup>
                     </CommandList>
                 </Command>
+                <Button variant="outline" onClick={()=>{
+                                    console.log("selected");
+                                    setOpen(false);
+                                    storeModal.onOpen();
+                                }}>
+                    Create Store Button
+                </Button>
             </PopoverContent>
         </Popover>
     );
