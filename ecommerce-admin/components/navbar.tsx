@@ -11,6 +11,7 @@ const Navbar = async () => {
     if (!userId){
         redirect("/sign-in");
     }
+    //get all the sotres of the user
     const stores = await prismadb.store.findMany({
         where:{
             userId,
@@ -22,6 +23,7 @@ const Navbar = async () => {
         <div className="border-b"> 
             {/* height of 16, centre aligned */}
             <div className="flex h-16 items-center px-4">
+                {/* pass in the stores into store switch */}
                 <StoreSwitcher items={stores} />
                 <MainNav className="mx-6"/>
                 {/* aligned to the left, centrede, space of 4 */}

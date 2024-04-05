@@ -108,13 +108,6 @@ export default function StoreSwitcher({
                         </CommandGroup>
                     </CommandList>
                 </Command>
-                <Button variant="outline" onClick={()=>{
-                                    console.log("selected");
-                                    setOpen(false);
-                                    storeModal.onOpen();
-                                }}>
-                    Create Store Button
-                </Button>
             </PopoverContent>
         </Popover>
     );
