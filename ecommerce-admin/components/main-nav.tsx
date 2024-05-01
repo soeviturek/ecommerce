@@ -11,7 +11,13 @@ export function MainNav({
     const pathname = usePathname();
     const params = useParams();
 
-    const routes = [{
+    const routes = [
+        {
+            href:`/${params.storeId}`,
+            label:'Overview',
+            active:pathname==`/${params.storeId}`,
+        },
+        {
         // Navbar is used in storeId layout, so we ave access to it
         href: `/${params.storeId}/settings`,
         label: 'Settings',
