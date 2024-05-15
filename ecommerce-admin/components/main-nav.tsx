@@ -18,6 +18,11 @@ export function MainNav({
             active:pathname==`/${params.storeId}`,
         },
         {
+            href:`/${params.storeId}/billboard`,
+            label:'Billboards',
+            active:pathname==`/${params.storeId}/billboard`,
+        },
+        {
         // Navbar is used in storeId layout, so we ave access to it
         href: `/${params.storeId}/settings`,
         label: 'Settings',
