@@ -20,10 +20,9 @@ const BillboardPage =  async ({
         // either display create new form or edit existing form (update).
 
     <div className="flex-col">
-        {/* <div className="flex-1 space-y-4 p-8 pt-6">
+        <div className="flex-1 space-y-4 p-8 pt-6">
             <BillboardForm  initialData={billboard}/>
-        </div> */}
-        Billboard
+        </div>
         {/* Existing Billboard:{billboard?.label} */}
     </div>
     );

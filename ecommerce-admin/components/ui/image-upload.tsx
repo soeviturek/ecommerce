@@ -20,7 +20,7 @@ const ImageUpload:React.FC<ImageUploadProps>= ({
     value
 }) => {
 
-    //it is any because cloudinary doesn't have type
+    //it is any type because cloudinary doesn't have type
     const onUpload= (result:any) =>{
         onChange(result.info.secure_url);
         
@@ -48,9 +48,12 @@ const ImageUpload:React.FC<ImageUploadProps>= ({
                             <Button type="button" onClick={()=>onRemove(url)} variant="destructive" size="icon">
                                 <Trash className="h-4 w-4"/>
                             </Button>
+                            {/* You need to specify the domain of cloudinary in next.config.js */}
                             <Image fill className="object-cover" alt="Image" src={url}/>
                         </div>
-                        <CldUploadWidget onSuccess={onUpload} uploadPreset="wsaiu5u2">
+                    </div>
+                ))}
+                <CldUploadWidget onSuccess={onUpload} uploadPreset="wsaiu5u2">
                             {
                                 ({open}) => {
                                     const onClick = ()=>{
@@ -58,17 +61,23 @@ const ImageUpload:React.FC<ImageUploadProps>= ({
                                     }
 
                                     return (
-                                        <Button type="button" disabled={disabled} variant="secondary" onClick={onClick}>
+                                        <Button 
+                                            type="button" 
+                                            disabled={disabled} 
+                                            variant="secondary" 
+                                            onClick={onClick}
+                                        >
                                             <ImagePlus className="h-4 w-4 mr-2"/>
+                                            Upload an Image
                                         </Button>
                                     )
                                 }
                             }
                         </CldUploadWidget>
-                    </div>
-
-                ))}
             </div>
         </div>
     )
 };
+
+
+export default ImageUpload;
