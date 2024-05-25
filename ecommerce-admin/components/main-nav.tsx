@@ -20,7 +20,7 @@ export function MainNav({
         {
             href:`/${params.storeId}/billboards`,
             label:'Billboards',
-            active:pathname==`/${params.storeId}/billboard`,
+            active:pathname==`/${params.storeId}/billboards`,
         },
         {
         // Navbar is used in storeId layout, so we ave access to it

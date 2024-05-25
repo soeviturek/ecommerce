@@ -82,6 +82,7 @@ export const BillboardForm:React.FC<BillboardFormProps> = ({initialData}) => {
             }
             
             router.refresh(); //resynchronise the server component page.tst to fetch store (call again) to get initialData
+            router.push(`/${params.storeId}/billboards`);
             toast.success(toastMessage);
         } catch (error) {
             //safety meassure, can add on delete method later.
@@ -119,37 +120,39 @@ export const BillboardForm:React.FC<BillboardFormProps> = ({initialData}) => {
                         control={form.control}
                         name="imageUrl" //it matches formSchema.name
                         render={({ field })=>(
-                        <FormItem>
-                            <FormLabel>BackgroundImage</FormLabel>
-                            <FormControl>
-                                <ImageUpload
-                                // pass in an array of one url or just pass in empty array
-                                    value={field.value ? [field.value] : []}
-                                    disabled={loading}
-                                    onChange={(url)=>field.onChange(url)}
-                                    onRemove={()=>field.onChange("")}
-                                
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>)}
+                            <FormItem>
+                                <FormLabel>BackgroundImage</FormLabel>
+                                <FormControl>
+                                    <ImageUpload
+                                    // pass in an array of one url or just pass in empty array
+                                        value={field.value ? [field.value] : []}
+                                        disabled={loading}
+                                        onChange={(url)=>field.onChange(url)}
+                                        onRemove={()=>field.onChange("")}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="label" //it matches formSchema.name
-                        render={({ field })=>(<FormItem>
-                            <FormLabel>Label</FormLabel>
-                            <FormControl>
-                                {/* Store name is autofield because we have passed the initial data and have defaultValues */}
-                                <Input disabled={loading} placeholder="Billboard Label" {...field}/>
-                            </FormControl>
-                            {/* You get proper error message */}
-                            <FormMessage/>
-                        </FormItem>)}
-                    />
-                <Button disabled={loading} className="ml-auto" type="submit">
-                    {action}
-                </Button>
+                    <div className="grid grid-cols-3 gap-8">
+                        <FormField
+                            control={form.control}
+                            name="label" //it matches formSchema.name
+                            render={({ field })=>(<FormItem>
+                                <FormLabel>Label</FormLabel>
+                                <FormControl>
+                                    {/* Store name is autofield because we have passed the initial data and have defaultValues */}
+                                    <Input disabled={loading} placeholder="Billboard Label" {...field}/>
+                                </FormControl>
+                                {/* You get proper error message */}
+                                <FormMessage/>
+                            </FormItem>)}
+                        />
+                    </div>
+                    <Button disabled={loading} className="ml-auto" type="submit">
+                        {action}
+                    </Button>
                 </form>
             </Form>
             
