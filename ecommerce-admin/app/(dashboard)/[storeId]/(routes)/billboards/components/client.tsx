@@ -6,7 +6,8 @@ import { Separator } from "@/components/ui/separator"
 import { Plus } from "lucide-react"
 import Image from "next/image"
 import { useParams,useRouter } from "next/navigation"
-import { BillboardColumn } from "./columns"
+import { BillboardColumn, columns } from "./columns"
+import { DataTable } from "@/components/ui/data-table"
 
 // client component to load all billboards
 
@@ -33,21 +34,8 @@ export const BillboardClient:React.FC<BillboardClientProps> = ({data})=>{
                 </Button>
             </div>
             <Separator/>
-            <div>
-                {data.map((billboard)=>(
-                    <div>
-                        <div className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
-                            {/* <Image fill className="hover-over" alt="Image" src={billboard.imageUrl} /> */}
-                        </div>
-                        {/* {billboard.imageUrl} */}
-                        {billboard.label}
-                    </div>
-                ))
-                }
-
-            </div>
-            {/* Further code to get all billboards */}
-            
+            <DataTable searchKey="label" columns={columns} data={data}/>    
+            {/* add Pagination */}
     </div>
             
     )
