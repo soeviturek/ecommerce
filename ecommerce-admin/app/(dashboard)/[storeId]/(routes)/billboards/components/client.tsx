@@ -8,6 +8,7 @@ import Image from "next/image"
 import { useParams,useRouter } from "next/navigation"
 import { BillboardColumn, columns } from "./columns"
 import { DataTable } from "@/components/ui/data-table"
+import { ApiList } from "@/components/ui/api-list"
 
 // client component to load all billboards
 
@@ -35,7 +36,10 @@ export const BillboardClient:React.FC<BillboardClientProps> = ({data})=>{
             </div>
             <Separator/>
             <DataTable searchKey="label" columns={columns} data={data}/>    
-            {/* add Pagination */}
+
+            <Heading title="API" description="API calls for Billboards" />
+            <Separator />
+            <ApiList entityName="billboards" entityIdName="billboardId"/>
     </div>
             
     )
