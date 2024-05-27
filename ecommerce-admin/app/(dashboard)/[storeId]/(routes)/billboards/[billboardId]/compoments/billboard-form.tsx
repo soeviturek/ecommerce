@@ -60,7 +60,7 @@ export const BillboardForm:React.FC<BillboardFormProps> = ({initialData}) => {
 
             await axios.delete(`/api/${params.storeId}/billboards/${params.billboardId}`);
             router.refresh(); //resynchronise the server component page.tst to fetch store (call again) to get initialData
-            router.push("/"); //go back to homepage, check if there is any new store, otherwise, create new store
+            router.push(`/${params.storeId}/billboards`); //go back to billboards page, check if there is any new store, otherwise, create new store
             toast.success("Billboard deleted");
         } catch (error) {
             //safety meassure, can add on delete method later.
