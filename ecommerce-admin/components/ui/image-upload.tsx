@@ -23,7 +23,7 @@ const ImageUpload:React.FC<ImageUploadProps>= ({
     //it is any type because cloudinary doesn't have type
     const onUpload= (result:any) =>{
         onChange(result.info.secure_url);
-        
+        console.log(result.info.secure_url); 
     }
 
 
@@ -35,8 +35,6 @@ const ImageUpload:React.FC<ImageUploadProps>= ({
     if (!isMounted){
         return null;
     } 
-
-
     return (
         <div>
             <div className="mb-4 flex items-center gap-4">
@@ -54,28 +52,29 @@ const ImageUpload:React.FC<ImageUploadProps>= ({
                         <Image fill className="object-cover" alt="Image" src={url}/>
                     </div>
                 ))}
-                <CldUploadWidget onSuccess={onUpload} uploadPreset="wsaiu5u2">
-                            {
-                                ({open}) => {
-                                    const onClick = ()=>{
-                                        open();
-                                    }
-
-                                    return (
-                                        <Button 
-                                            type="button" 
-                                            disabled={disabled} 
-                                            variant="secondary" 
-                                            onClick={onClick}
-                                        >
-                                            <ImagePlus className="h-4 w-4 mr-2"/>
-                                            Upload an Image
-                                        </Button>
-                                    )
-                                }
-                            }
-                        </CldUploadWidget>
             </div>
+            {/* onSuccess auto refreshes the page..? */}
+            <CldUploadWidget onUpload={onUpload} uploadPreset="wsaiu5u2">
+                {
+                    ({open}) => {
+                        const onClick = ()=>{
+                            open();
+                        }
+
+                        return (
+                            <Button 
+                                type="button" 
+                                disabled={disabled} 
+                                variant="secondary" 
+                                onClick={onClick}
+                            >
+                                <ImagePlus className="h-4 w-4 mr-2"/>
+                                Upload an Image
+                            </Button>
+                        )
+                    }
+                }
+            </CldUploadWidget>
         </div>
     )
 };

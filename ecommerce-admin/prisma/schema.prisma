@@ -101,7 +101,8 @@ model Product{
   colour Colour @relation(fields:[colourId],references:[id])
   images Image[]
 
-  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([storeId])
   @@index([categoryId])
