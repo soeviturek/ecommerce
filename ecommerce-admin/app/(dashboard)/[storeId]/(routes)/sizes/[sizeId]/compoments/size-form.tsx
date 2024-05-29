@@ -58,13 +58,13 @@ export const SizeForm:React.FC<SizeFormProps> = ({initialData}) => {
         try {
             setLoading(true);
 
-            await axios.delete(`/api/${params.storeId}/sizes/${params.billboardId}`);
+            await axios.delete(`/api/${params.storeId}/sizes/${params.sizeId}`);
             router.refresh(); //resynchronise the server component page.tst to fetch store (call again) to get initialData
-            router.push(`/${params.storeId}/sizes`); //go back to billboards page, check if there is any new store, otherwise, create new store
+            router.push(`/${params.storeId}/sizes`);
             toast.success("Size deleted");
         } catch (error) {
             //safety meassure, can add on delete method later.
-            toast.error("Make sure you removed all the catergories using this size before you remove.");   
+            toast.error("Make sure you removed all the products using this size before you remove.");   
         }finally{
             setLoading(false);
             setOpen(false); //close the modal
@@ -74,14 +74,15 @@ export const SizeForm:React.FC<SizeFormProps> = ({initialData}) => {
         try {
             setLoading(true);
             if(initialData){
-                await axios.patch(`/api/${params.storeId}/sizes/${params.billboardId}`,data);
+                await axios.patch(`/api/${params.storeId}/sizes/${params.sizeId}`,data);
             }else{
                 //otherwise, add it
                 await axios.post(`/api/${params.storeId}/sizes`,data);
             }
             
-            router.refresh(); //resynchronise the server component page.tst to fetch store (call again) to get initialData
             router.push(`/${params.storeId}/sizes`);
+            router.refresh(); //resynchronise the server component page.tst to fetch store (call again) to get initialData
+            
             toast.success(toastMessage);
         } catch (error) {
             //safety meassure, can add on delete method later.
@@ -115,31 +116,25 @@ export const SizeForm:React.FC<SizeFormProps> = ({initialData}) => {
             <Separator />
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
-                    <FormField
-                        control={form.control}
-                        name="name" //it matches formSchema.name
-                        render={({ field })=>(
-                            <FormItem>
-                                <FormLabel>BackgroundImage</FormLabel>
-                                <FormControl>
-                                    <ImageUpload
-                                    // pass in an array of one url or just pass in empty array
-                                        value={field.value ? [field.value] : []}
-                                        disabled={loading}
-                                        onChange={(url)=>field.onChange(url)}
-                                        onRemove={()=>field.onChange("")}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
                     <div className="grid grid-cols-3 gap-8">
+                        <FormField
+                                control={form.control}
+                                name="name" //it matches formSchema.name
+                                render={({ field })=>(<FormItem>
+                                    <FormLabel>Name</FormLabel>
+                                    <FormControl>
+                                        {/* Store name is autofield because we have passed the initial data and have defaultValues */}
+                                        <Input disabled={loading} placeholder="Size Name" {...field}/>
+                                    </FormControl>
+                                    {/* You get proper error message */}
+                                    <FormMessage/>
+                                </FormItem>)}
+                            />
                         <FormField
                             control={form.control}
                             name="value" //it matches formSchema.name
                             render={({ field })=>(<FormItem>
-                                <FormLabel>Label</FormLabel>
+                                <FormLabel>Value</FormLabel>
                                 <FormControl>
                                     {/* Store name is autofield because we have passed the initial data and have defaultValues */}
                                     <Input disabled={loading} placeholder="Size Value" {...field}/>

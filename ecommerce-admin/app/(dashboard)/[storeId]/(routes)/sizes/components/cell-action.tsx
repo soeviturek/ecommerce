@@ -34,7 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
             toast.success("Size deleted");
         } catch (error) {
             //safety meassure, can add on delete method later.
-            toast.error("Make sure you removed all the catergories using this size before you remove.");   
+            toast.error("Make sure you removed all the products using this size before you remove.");   
         }finally{
             setLoading(false);
             setOpen(false); //close the modal
