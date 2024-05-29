@@ -22,6 +22,8 @@ model Store{
   billboards  Billboard[] @relation("StoreToBillboard")
   categories Category[] @relation("StoreToCategory")
   sizes         Size[] @relation("StoreToSize")
+  colours         Colour[] @relation("StoreToColour")
+  products         Product[] @relation("StoreToProduct")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -47,6 +49,7 @@ model Category{
   store Store @relation("StoreToCategory",fields:[storeId],references:[id])
   billboardId String
   billboard Billboard @relation(fields:[billboardId],references:[id])
+  products Product[] @relation("CategoryToProduct")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -60,10 +63,62 @@ model Size{
   store Store @relation("StoreToSize", fields:[storeId],references:[id])
   name String
   value String
+  products Product[]
   // product Product
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   
   @@index([storeId])
+}
+model Colour{
+  id String @id @default(uuid())
+  storeId String
+  store Store @relation("StoreToColour", fields:[storeId],references:[id])
+  name String
+  value String
+  products Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  
+  @@index([storeId])
+}
+
+model Product{
+  id String @id @default(uuid())
+  storeId String
+  store Store @relation("StoreToProduct",fields:[storeId],references:[id])
+  categoryId String
+  category Category @relation("CategoryToProduct",fields:[categoryId],references:[id])
+  name String
+  price Decimal
+  isFeatured Boolean @default(false)
+  isArchived Boolean @default(false)
+  sizeId String
+  size Size @relation(fields:[sizeId],references:[id])
+  colourId String
+  colour Colour @relation(fields:[colourId],references:[id])
+  images Image[]
+
+  
+
+  @@index([storeId])
+  @@index([categoryId])
+  @@index([sizeId])
+  @@index([colourId])
+
+
+}
+
+model Image{
+  id String @id @default(uuid())
+  productId String
+  // delete product even if we have images
+  product Product @relation(fields:[productId],references:[id],onDelete: Cascade)
+  url String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([productId])
 }

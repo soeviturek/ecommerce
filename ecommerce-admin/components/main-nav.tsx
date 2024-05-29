@@ -33,6 +33,11 @@ export function MainNav({
             active: pathname === `/${params.storeId}/sizes`,
         },
         {
+            href: `/${params.storeId}/colours`,
+            label: 'Colours',
+            active: pathname === `/${params.storeId}/colours`,
+        },
+        {
         // Navbar is used in storeId layout, so we ave access to it
         href: `/${params.storeId}/settings`,
         label: 'Settings',
