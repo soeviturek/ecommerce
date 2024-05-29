@@ -11,20 +11,41 @@ export async function POST (
     try {
         const {userId} = auth();
         const body = await req.json();
-        const {label,imageUrl} = body;
+        const {name,
+            price,
+            categoryId,
+            colourId,
+            sizeId,
+            images,
+            isFeatured,
+            isArchived
+        } = body;
         
         if(!userId){
             return new NextResponse("Unauthenticated",{status:401});
         }
-        if(!label){
-            return new NextResponse("Label is required",{status:400});
+        if(!name){
+            return new NextResponse("Name is required",{status:400});
         }
-        if(!imageUrl){
-            return new NextResponse("Image URL is required",{status:400});
+        if(!price){
+            return new NextResponse("Price is required",{status:400});
+        }
+        if(!categoryId){
+            return new NextResponse("Category id is required",{status:400});
+        }
+        if(!sizeId){
+            return new NextResponse("Size id is required",{status:400});
+        }
+        if(!colourId){
+            return new NextResponse("Colour id is required",{status:400});
+        }
+        if(!images || !images.length){
+            return new NextResponse("Images are required",{status:400})
         }
         if(!params.storeId){
             return new NextResponse("Store id is required",{status:400});
         }
+
         const storeByUserId = await prismadb.store.findFirst({
             where:{
                 id:params.storeId,
@@ -37,17 +58,31 @@ export async function POST (
             return new NextResponse("Unauthorized",{status:403})
         }
 
-        const billboard = await prismadb.billboard.create({
+        const product = await prismadb.product.create({
             data:{
-                label,
-                imageUrl,
+                name,
+                price,
+                isFeatured,
+                isArchived,
+                sizeId,
+                colourId,
+                categoryId,
+                images:{
+                    // create image array
+                    createMany:{
+                        data:[
+                            ...images.map((image:{url:string})=>image)
+                        
+                        ]
+                    }
+                },
                 storeId:params.storeId
             }
         });
-        return NextResponse.json(billboard);
+        return NextResponse.json(product);
 
     } catch (error) {
-        console.log('[BILLBOARDS_POST]',error);
+        console.log('[PRODUCTS_POST]',error);
         return new NextResponse("Internal error",{status:500});
     }
 }
@@ -57,20 +92,38 @@ export async function GET (
     {params}:{params:{storeId:string}}
 ){
     try {
-        
+        const {searchParams} = new URL(req.url);
+        const categoryId=searchParams.get("categoryId")|| undefined;
+        const colourId=searchParams.get("categoryId")|| undefined;
+        const sizeId=searchParams.get("categoryId")|| undefined;
+        const isFeatured=searchParams.get("categoryId")|| undefined;
 
-        const billboards = await prismadb.billboard.findMany({
+
+        const products = await prismadb.product.findMany({
             where:{
-                storeId:params.storeId
+                storeId:params.storeId,
+                categoryId,
+                colourId,
+                sizeId,
+                //undefined compelely ignores this, instead of false
+                isFeatured: isFeatured?true:undefined,
+                isArchived:false,
+
+            },
+            include:{
+                images:true,
+                category:true,
+                colour:true,
+                size:true,
             },
             orderBy:{
                 createdAt:'desc'
             }
         });
-        return NextResponse.json(billboards);
+        return NextResponse.json(products);
 
     } catch (error) {
-        console.log('[BILLBOARDS_GET]',error);
+        console.log('[PRODUCTS_GET]',error);
         return new NextResponse("Internal error",{status:500});
     }
 }
@@ -106,7 +159,7 @@ export async function PATCH (
 
     } catch (error) {
         // single store, patch method, easy to debug
-        console.log('[BILLBOARDS_PATCH]',error);
+        console.log('[PRODUCT_PATCH]',error);
         return new NextResponse("Internal error",{status:500});
     }
 }

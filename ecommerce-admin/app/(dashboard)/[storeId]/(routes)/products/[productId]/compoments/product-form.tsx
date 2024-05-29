@@ -1,6 +1,6 @@
 "use client"
 
-import { Image, Product } from "@prisma/client";
+import { Category, Colour, Image, Product, Size } from "@prisma/client";
 import { Heading } from "@/components/ui/heading";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -18,10 +18,15 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "@/components/ui/image-upload";
+import { Select,SelectTrigger,SelectValue,SelectContent,SelectItem } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 interface ProductFormProps{
     initialData: Product & {
         images: Image[]
     } | null;
+    categories:Category[];
+    colours:Colour[]
+    sizes:Size[];
 };
 
 //change the name of zod
@@ -29,7 +34,7 @@ const formSchema = z.object({
     name:z.string().min(1),
     images:z.object({url:z.string()}).array(),
     price:z.coerce.number().min(1),
-    colorId:z.string().min(1),
+    colourId:z.string().min(1),
     categoryId:z.string().min(1),
     sizeId:z.string().min(1),
     isFeatured:z.boolean().default(false).optional(),
@@ -40,7 +45,7 @@ const formSchema = z.object({
 type ProductFormValues = z.infer<typeof formSchema>;
 
 // this component is only used in settings therefore the folder can be put under settings
-export const ProductForm:React.FC<ProductFormProps> = ({initialData}) => {
+export const ProductForm:React.FC<ProductFormProps> = ({initialData,categories,sizes,colours}) => {
     const params = useParams();
     const router = useRouter();
     const origin = useOrigin();
@@ -66,6 +71,7 @@ export const ProductForm:React.FC<ProductFormProps> = ({initialData}) => {
             price: 0,
             categoryId:'',
             sizeId:'',
+            colourId:'',
             isFeatured:false,
             isArchived:false,
         }
@@ -76,12 +82,12 @@ export const ProductForm:React.FC<ProductFormProps> = ({initialData}) => {
             setLoading(true);
 
             await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
-            router.refresh(); //resynchronise the server component page.tst to fetch store (call again) to get initialData
+            router.refresh();
             router.push(`/${params.storeId}/products`);
             toast.success("Product deleted");
         } catch (error) {
             //safety meassure, can add on delete method later.
-            toast.error("Make sure you removed all the catergories using this product before you remove.");   
+            toast.error("Something went wrong!");   
         }finally{
             setLoading(false);
             setOpen(false); //close the modal
@@ -144,9 +150,7 @@ export const ProductForm:React.FC<ProductFormProps> = ({initialData}) => {
                                 <FormControl>
                                     <ImageUpload
                                         value={field.value.map((image)=>(image.url))}
-                                        // value={test.map((image)=>image.url)}
                                         disabled={loading}
-                                        // onChange={(url)=>field.onChange([...field.value,{url},{url:"https://res.cloudinary.com/dscnnrudb/image/upload/v1716973408/smzisxnvuru6btygt0yb.jpg"}])}
                                         onChange={(url)=>field.onChange([...field.value,{url}])}
                                         onRemove={(url)=>field.onChange([...field.value.filter((current)=>current.url !== url)])}
                                     />
@@ -169,6 +173,163 @@ export const ProductForm:React.FC<ProductFormProps> = ({initialData}) => {
                                 <FormMessage/>
                             </FormItem>)}
                         />
+                        <FormField
+                            control={form.control}
+                            name="price"
+                            render={({ field })=>(<FormItem>
+                                <FormLabel>Price</FormLabel>
+                                <FormControl>
+                                    {/* Store name is autofield because we have passed the initial data and have defaultValues */}
+                                    <Input type="number" disabled={loading} placeholder="9.99" {...field}/>
+                                </FormControl>
+                                {/* You get proper error message */}
+                                <FormMessage/>
+                            </FormItem>)}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="categoryId" //it matches formSchema.name
+                            render={({ field })=>(
+                            <FormItem>
+                                <FormLabel>Category</FormLabel>
+                                    <Select 
+                                        disabled={loading} 
+                                        onValueChange={field.onChange} 
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue 
+                                                    defaultValue={field.value} 
+                                                    placeholder="Select a Category"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {categories.map((category)=>(
+                                                <SelectItem key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </SelectItem>
+                                                )
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                <FormMessage/>
+                            </FormItem>)}
+                        />
+                        
+                        <FormField
+                            control={form.control}
+                            name="sizeId" //it matches formSchema.name
+                            render={({ field })=>(
+                            <FormItem>
+                                <FormLabel>Size</FormLabel>
+                                    <Select 
+                                        disabled={loading} 
+                                        onValueChange={field.onChange} 
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue 
+                                                    defaultValue={field.value} 
+                                                    placeholder="Select a Size"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {sizes.map((size)=>(
+                                                <SelectItem key={size.id} value={size.id}>
+                                                    {size.name}
+                                                </SelectItem>
+                                                )
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                <FormMessage/>
+                            </FormItem>)}
+                        />
+                        
+                        <FormField
+                            control={form.control}
+                            name="colourId" //it matches formSchema.name
+                            render={({ field })=>(
+                            <FormItem>
+                                <FormLabel>Colour</FormLabel>
+                                    <Select 
+                                        disabled={loading} 
+                                        onValueChange={field.onChange} 
+                                        value={field.value}
+                                        defaultValue={field.value}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue 
+                                                    defaultValue={field.value} 
+                                                    placeholder="Select a Colour"
+                                                />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {colours.map((colour)=>(
+                                                <SelectItem key={colour.id} value={colour.id}>
+                                                    {colour.name}
+                                                </SelectItem>
+                                                )
+                                            )}
+                                        </SelectContent>
+                                    </Select>
+                                <FormMessage/>
+                            </FormItem>)}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="isFeatured" //it matches formSchema.name
+                            render={({ field })=>(
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                <FormControl>
+                                    <Checkbox
+                                    checked={field.value}
+                                    // @ts-ignore
+                                    onCheckedChange={field.onChange} //may cause error but doesn't affect functionality
+                                    />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>
+                                        Featured
+                                    </FormLabel>
+                                    <FormDescription>
+                                        This product will appear on the home page.
+                                    </FormDescription>
+                                </div>
+                            </FormItem>)}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="isArchived" //it matches formSchema.name
+                            render={({ field })=>(
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                                <FormControl>
+                                    <Checkbox
+                                    checked={field.value}
+                                    // @ts-ignore
+                                    onCheckedChange={field.onChange} //may cause error but doesn't affect functionality
+                                    />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>
+                                        Archived
+                                    </FormLabel>
+                                    <FormDescription>
+                                        This product will not appear anywhere in the store.
+                                    </FormDescription>
+                                </div>
+                            </FormItem>)}
+                        />
+
+
                     </div>
                     <Button disabled={loading} className="ml-auto" type="submit">
                         {action}
