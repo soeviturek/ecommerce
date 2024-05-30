@@ -103,8 +103,8 @@ export const ProductForm:React.FC<ProductFormProps> = ({initialData,categories,s
                 await axios.post(`/api/${params.storeId}/products`,data);
             }
             
-            router.refresh(); //resynchronise the server component page.tst to fetch store (call again) to get initialData
             router.push(`/${params.storeId}/products`);
+            router.refresh(); //resynchronise the server component page.tst to fetch store (call again) to get initialData
             toast.success(toastMessage);
         } catch (error) {
             //safety meassure, can add on delete method later.

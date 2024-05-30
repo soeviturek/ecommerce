@@ -20,7 +20,7 @@ export const CellAction: React.FC<CellActionProps> = ({data}) => {
     const params = useParams();
     const onCopy = (id: string) =>{
         navigator.clipboard.writeText(id);
-        toast.success("API Route copied to the clipboard.");
+        toast.success("Colour id copied to the clipboard.");
     }
     const [loading, setLoading] = useState(false);
     const [open,setOpen] = useState(false);

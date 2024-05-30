@@ -94,9 +94,9 @@ export async function GET (
     try {
         const {searchParams} = new URL(req.url);
         const categoryId=searchParams.get("categoryId")|| undefined;
-        const colourId=searchParams.get("categoryId")|| undefined;
-        const sizeId=searchParams.get("categoryId")|| undefined;
-        const isFeatured=searchParams.get("categoryId")|| undefined;
+        const colourId=searchParams.get("colourId")|| undefined;
+        const sizeId=searchParams.get("sizeId")|| undefined;
+        const isFeatured=searchParams.get("isFeatured")|| undefined;
 
 
         const products = await prismadb.product.findMany({
