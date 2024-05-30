@@ -25,7 +25,8 @@ const MainNav:React.FC<MainNavProps> = ({data})=>{
                 className={cn("text-sm font-medium transition-colors hover:text-black",
                 route.active ? "text-black":"text-neutral"
                 )}>
-
+                    {/* I forgot this part. DEBUG FOR LIKE 20 mins LUL */}
+                    {route.label}
                 </Link>
             ))}
         </nav>
