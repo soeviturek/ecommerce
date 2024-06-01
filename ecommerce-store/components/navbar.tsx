@@ -19,6 +19,7 @@ const Navbar = async ()=>{
                     </Link>
                     {/* render routes */}
                     <MainNav data={categories}/>
+
                     <NavbarActions />
                 </div>
             </Container>
