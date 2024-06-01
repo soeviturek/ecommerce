@@ -13,6 +13,7 @@ const CartPage = () => {
     const cart=useCart();
 
 
+    // potential hydration error here..
     // const [isMounted,setIsMounted] = useState(false);
     // useEffect(()=>{setIsMounted(true)},[]);
     // if(!isMounted){
